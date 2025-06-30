@@ -6,13 +6,14 @@ import ApperIcon from '@/components/ApperIcon'
 const Sidebar = ({ isCollapsed, onToggle }) => {
   const location = useLocation()
   
-  const navigation = [
+const navigation = [
     { name: 'Dashboard', href: '/', icon: 'LayoutDashboard' },
     { name: 'Self Analysis', href: '/self-analysis', icon: 'UserCheck' },
     { name: 'Recommendations', href: '/recommendations', icon: 'Target' },
     { name: 'Documents', href: '/documents', icon: 'FileText' },
     { name: 'Mock Interview', href: '/mock-interview', icon: 'MessageSquare' },
     { name: 'Applications', href: '/applications', icon: 'Briefcase' },
+    { name: 'Admin Panel', href: '/admin', icon: 'Shield' },
     { name: 'Settings', href: '/settings', icon: 'Settings' }
   ]
 

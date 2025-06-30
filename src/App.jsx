@@ -10,6 +10,7 @@ import Documents from '@/components/pages/Documents'
 import MockInterview from '@/components/pages/MockInterview'
 import Applications from '@/components/pages/Applications'
 import Settings from '@/components/pages/Settings'
+import AdminDashboard from '@/components/pages/AdminDashboard'
 function App() {
   return (
     <I18nextProvider i18n={i18n}>
@@ -21,9 +22,10 @@ function App() {
               <Route path="/self-analysis" element={<SelfAnalysis />} />
               <Route path="/recommendations" element={<Recommendations />} />
               <Route path="/documents" element={<Documents />} />
-              <Route path="/mock-interview" element={<MockInterview />} />
+<Route path="/mock-interview" element={<MockInterview />} />
               <Route path="/applications" element={<Applications />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
           </Layout>
 <ToastContainer

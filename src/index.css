@@ -114,3 +114,41 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* ApexCharts Custom Styling */
+.apexcharts-canvas {
+  font-family: 'Inter', sans-serif;
+}
+
+.apexcharts-legend-text {
+  color: #374151 !important;
+  font-size: 13px !important;
+}
+
+.apexcharts-tooltip {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+/* Admin Panel Specific Styles */
+.admin-metric-card {
+  @apply bg-gradient-to-br from-white to-gray-50 border border-gray-100;
+}
+
+.admin-alert-card {
+  @apply border-l-4 bg-white rounded-lg shadow-sm;
+}
+
+.admin-alert-warning {
+  @apply border-l-yellow-400 bg-yellow-50;
+}
+
+.admin-alert-error {
+  @apply border-l-red-400 bg-red-50;
+}
+
+.admin-alert-success {
+  @apply border-l-green-400 bg-green-50;
+}
