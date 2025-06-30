@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import ApperIcon from '@/components/ApperIcon'
 import LanguageSelector from '@/components/molecules/LanguageSelector'
-
 const Header = ({ onMenuToggle }) => {
-  const [language, setLanguage] = useState('en')
+  const { t, i18n } = useTranslation();
   const [showProfile, setShowProfile] = useState(false)
+
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang)
+  }
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 h-16 px-6 flex items-center justify-between">
@@ -21,20 +25,20 @@ const Header = ({ onMenuToggle }) => {
         </motion.button>
         
         <div className="ml-4 lg:ml-0">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Welcome back, Sarah! 👋
+<h2 className="text-lg font-semibold text-gray-900">
+            {t('welcomeBack')}
           </h2>
           <p className="text-sm text-gray-500">
-            Let's find your dream job today
+            {t('dreamJob')}
           </p>
         </div>
       </div>
 
       {/* Right side - Language selector and profile */}
       <div className="flex items-center space-x-4">
-        <LanguageSelector
-          value={language}
-          onChange={setLanguage}
+<LanguageSelector
+          value={i18n.language}
+          onChange={handleLanguageChange}
         />
         
         {/* Notifications */}

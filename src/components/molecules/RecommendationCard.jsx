@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import ApperIcon from '@/components/ApperIcon'
 import Card from '@/components/atoms/Card'
 import Badge from '@/components/atoms/Badge'
 import ProgressRing from '@/components/atoms/ProgressRing'
-
 const RecommendationCard = ({
   title,
   type,
@@ -13,8 +13,10 @@ const RecommendationCard = ({
   salary,
   location,
   onClick,
-  className = ''
+className = ''
 }) => {
+  const { t } = useTranslation();
+  
   const getMatchColor = (score) => {
     if (score >= 80) return '#10B981'
     if (score >= 60) return '#F59E0B'
@@ -66,8 +68,8 @@ const RecommendationCard = ({
         </div>
       )}
       
-      <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-700">Why this matches you:</p>
+<div className="space-y-2">
+        <p className="text-sm font-medium text-gray-700">{t('whyMatches')}</p>
         <ul className="space-y-1">
           {reasons.slice(0, 3).map((reason, index) => (
             <li key={index} className="flex items-start">
@@ -80,9 +82,9 @@ const RecommendationCard = ({
       
       <motion.div
         className="mt-4 flex items-center text-primary-600 text-sm font-medium"
-        whileHover={{ x: 5 }}
+whileHover={{ x: 5 }}
       >
-        <span>View Details</span>
+        <span>{t('viewDetails')}</span>
         <ApperIcon name="ArrowRight" size={16} className="ml-1" />
       </motion.div>
     </Card>

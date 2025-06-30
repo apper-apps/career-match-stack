@@ -1,26 +1,26 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
-import Card from '@/components/atoms/Card'
-import Button from '@/components/atoms/Button'
-import FormField from '@/components/molecules/FormField'
-import LanguageSelector from '@/components/molecules/LanguageSelector'
-import ApperIcon from '@/components/ApperIcon'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import LanguageSelector from "@/components/molecules/LanguageSelector";
+import FormField from "@/components/molecules/FormField";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
 const Settings = () => {
+  const { t, i18n } = useTranslation();
   const [settings, setSettings] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState('profile')
-
-  const tabs = [
-    { id: 'profile', name: 'Profile', icon: 'User' },
-    { id: 'preferences', name: 'Preferences', icon: 'Settings' },
-    { id: 'notifications', name: 'Notifications', icon: 'Bell' },
-    { id: 'webhooks', name: 'Integrations', icon: 'Zap' }
+const tabs = [
+    { id: 'profile', name: t('profile'), icon: 'User' },
+    { id: 'preferences', name: t('preferences'), icon: 'Settings' },
+    { id: 'notifications', name: t('notifications'), icon: 'Bell' },
+    { id: 'webhooks', name: t('integrations'), icon: 'Zap' }
   ]
 
   const loadSettings = async () => {
@@ -89,30 +89,29 @@ const Settings = () => {
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      toast.success('Settings saved successfully!')
+toast.success(t('settingsSaved'))
     } catch (err) {
-      toast.error('Failed to save settings')
+      toast.error(t('settingsSaveFailed'))
     } finally {
       setSaving(false)
     }
   }
 
   const handleTestWebhook = async () => {
-    try {
+try {
       if (!settings.webhooks?.webhookUrl) {
-        toast.error('Please enter a webhook URL first')
+        toast.error(t('enterWebhookUrl'))
         return
       }
 
-      toast.info('Testing webhook connection...')
+toast.info(t('testingWebhook'))
       
       // Simulate webhook test
       await new Promise(resolve => setTimeout(resolve, 2000))
       
-      toast.success('Webhook test successful!')
+      toast.success(t('webhookTestSuccess'))
     } catch (err) {
-      toast.error('Webhook test failed')
+      toast.error(t('webhookTestFailed'))
     }
   }
 
@@ -127,10 +126,10 @@ const Settings = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+<div>
+        <h1 className="text-3xl font-bold text-gray-900">{t('settings')}</h1>
         <p className="text-gray-600 mt-2">
-          Manage your account preferences and integrations
+          {t('settingsDesc')}
         </p>
       </div>
 
@@ -160,80 +159,83 @@ const Settings = () => {
         {/* Content */}
         <div className="lg:col-span-3">
           {activeTab === 'profile' && (
-            <Card className="p-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Information</h2>
+<Card className="p-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profileInformation')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  label="Full Name"
+<FormField
+                  label={t('fullName')}
                   name="name"
                   value={settings.profile?.name || ''}
                   onChange={(value) => handleInputChange(value, 'name', 'profile')}
                   icon="User"
                 />
-                <FormField
-                  label="Email Address"
+<FormField
+                  label={t('emailAddress')}
                   name="email"
                   type="email"
                   value={settings.profile?.email || ''}
                   onChange={(value) => handleInputChange(value, 'email', 'profile')}
                   icon="Mail"
                 />
-                <FormField
-                  label="Phone Number"
+<FormField
+                  label={t('phoneNumber')}
                   name="phone"
                   value={settings.profile?.phone || ''}
                   onChange={(value) => handleInputChange(value, 'phone', 'profile')}
                   icon="Phone"
                 />
-                <FormField
-                  label="Location"
+<FormField
+                  label={t('location')}
                   name="location"
                   value={settings.profile?.location || ''}
                   onChange={(value) => handleInputChange(value, 'location', 'profile')}
                   icon="MapPin"
                 />
               </div>
-              <div className="mt-6">
-                <label className="form-label">Bio</label>
+<div className="mt-6">
+                <label className="form-label">{t('bio')}</label>
                 <textarea
                   value={settings.profile?.bio || ''}
                   onChange={(e) => handleInputChange(e.target.value, 'bio', 'profile')}
                   className="form-input h-32 resize-none"
-                  placeholder="Tell us about yourself..."
+                  placeholder={t('tellAboutYourself')}
                 />
               </div>
             </Card>
           )}
 
           {activeTab === 'preferences' && (
-            <Card className="p-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Preferences</h2>
+<Card className="p-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('preferences')}</h2>
               <div className="space-y-6">
                 <div>
-                  <label className="form-label">Language</label>
+                  <label className="form-label">{t('language')}</label>
                   <LanguageSelector
-                    value={settings.preferences?.language || 'en'}
-                    onChange={(value) => handleInputChange(value, 'language', 'preferences')}
+                    value={settings.preferences?.language || i18n.language}
+                    onChange={(value) => {
+                      handleInputChange(value, 'language', 'preferences')
+                      i18n.changeLanguage(value)
+                    }}
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="form-label">Timezone</label>
+<div>
+                    <label className="form-label">{t('timezone')}</label>
                     <select
                       value={settings.preferences?.timezone || ''}
                       onChange={(e) => handleInputChange(e.target.value, 'timezone', 'preferences')}
                       className="form-input"
-                    >
-                      <option value="America/Los_Angeles">Pacific Time</option>
-                      <option value="America/Denver">Mountain Time</option>
-                      <option value="America/Chicago">Central Time</option>
-                      <option value="America/New_York">Eastern Time</option>
+>
+                      <option value="America/Los_Angeles">{t('pacificTime')}</option>
+                      <option value="America/Denver">{t('mountainTime')}</option>
+                      <option value="America/Chicago">{t('centralTime')}</option>
+                      <option value="America/New_York">{t('easternTime')}</option>
                     </select>
                   </div>
                   
-                  <div>
-                    <label className="form-label">Date Format</label>
+<div>
+                    <label className="form-label">{t('dateFormat')}</label>
                     <select
                       value={settings.preferences?.dateFormat || ''}
                       onChange={(e) => handleInputChange(e.target.value, 'dateFormat', 'preferences')}
@@ -248,9 +250,9 @@ const Settings = () => {
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">Email Notifications</p>
-                      <p className="text-sm text-gray-500">Receive notifications via email</p>
+<div>
+                      <p className="font-medium text-gray-900">{t('emailNotifications')}</p>
+                      <p className="text-sm text-gray-500">{t('emailNotificationsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -264,9 +266,9 @@ const Settings = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">Push Notifications</p>
-                      <p className="text-sm text-gray-500">Receive push notifications</p>
+<div>
+                      <p className="font-medium text-gray-900">{t('pushNotifications')}</p>
+                      <p className="text-sm text-gray-500">{t('pushNotificationsDesc')}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -284,25 +286,25 @@ const Settings = () => {
           )}
 
           {activeTab === 'notifications' && (
-            <Card className="p-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Notification Settings</h2>
+<Card className="p-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('notificationSettings')}</h2>
               <div className="space-y-6">
-                {Object.entries({
-                  applicationUpdates: 'Application Updates',
-                  interviewReminders: 'Interview Reminders',
-                  newRecommendations: 'New Recommendations',
-                  weeklyDigest: 'Weekly Digest',
-                  marketingEmails: 'Marketing Emails'
+{Object.entries({
+                  applicationUpdates: t('applicationUpdates'),
+                  interviewReminders: t('interviewReminders'),
+                  newRecommendations: t('newRecommendations'),
+                  weeklyDigest: t('weeklyDigest'),
+                  marketingEmails: t('marketingEmails')
                 }).map(([key, label]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">{label}</p>
+<p className="font-medium text-gray-900">{label}</p>
                       <p className="text-sm text-gray-500">
-                        {key === 'applicationUpdates' && 'Get notified when your applications are updated'}
-                        {key === 'interviewReminders' && 'Receive reminders before interviews'}
-                        {key === 'newRecommendations' && 'Get notified about new job recommendations'}
-                        {key === 'weeklyDigest' && 'Receive weekly progress summary'}
-                        {key === 'marketingEmails' && 'Receive product updates and tips'}
+                        {key === 'applicationUpdates' && t('applicationUpdatesDesc')}
+                        {key === 'interviewReminders' && t('interviewRemindersDesc')}
+                        {key === 'newRecommendations' && t('newRecommendationsDesc')}
+                        {key === 'weeklyDigest' && t('weeklyDigestDesc')}
+                        {key === 'marketingEmails' && t('marketingEmailsDesc')}
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -321,13 +323,13 @@ const Settings = () => {
           )}
 
           {activeTab === 'webhooks' && (
-            <Card className="p-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Webhook Integration</h2>
+<Card className="p-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('webhookIntegration')}</h2>
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Enable Webhooks</p>
-                    <p className="text-sm text-gray-500">Connect with external automation tools</p>
+<div>
+                      <p className="font-medium text-gray-900">{t('enableWebhooks')}</p>
+                      <p className="text-sm text-gray-500">{t('enableWebhooksDesc')}</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
@@ -342,8 +344,8 @@ const Settings = () => {
 
                 {settings.webhooks?.enableWebhooks && (
                   <>
-                    <FormField
-                      label="Webhook URL"
+<FormField
+                      label={t('webhookUrl')}
                       name="webhookUrl"
                       value={settings.webhooks?.webhookUrl || ''}
                       onChange={(value) => handleInputChange(value, 'webhookUrl', 'webhooks')}
@@ -351,8 +353,8 @@ const Settings = () => {
                       icon="Link"
                     />
 
-                    <div>
-                      <label className="form-label">AI Model Selection</label>
+<div>
+                      <label className="form-label">{t('aiModelSelection')}</label>
                       <select
                         value={settings.webhooks?.selectedAI || 'gpt-4'}
                         onChange={(e) => handleInputChange(e.target.value, 'selectedAI', 'webhooks')}
@@ -364,23 +366,23 @@ const Settings = () => {
                       </select>
                     </div>
 
-                    <FormField
-                      label="API Key"
+<FormField
+                      label={t('apiKey')}
                       name="apiKey"
                       type="password"
                       value={settings.webhooks?.apiKey || ''}
                       onChange={(value) => handleInputChange(value, 'apiKey', 'webhooks')}
-                      placeholder="Enter your API key"
+                      placeholder={t('enterApiKey')}
                       icon="Key"
                     />
 
                     <div className="flex space-x-3">
                       <Button
-                        variant="outline"
-                        onClick={handleTestWebhook}
-                        icon="Zap"
-                      >
-                        Test Connection
+variant="outline"
+                      onClick={handleTestWebhook}
+                      icon="Zap"
+                    >
+                      {t('testConnection')}
                       </Button>
                     </div>
                   </>
@@ -389,7 +391,7 @@ const Settings = () => {
             </Card>
           )}
 
-          {/* Save Button */}
+{/* Save Button */}
           <div className="flex justify-end">
             <Button
               variant="primary"
@@ -397,7 +399,7 @@ const Settings = () => {
               loading={saving}
               icon="Save"
             >
-              Save Changes
+              {t('saveChanges')}
             </Button>
           </div>
         </div>

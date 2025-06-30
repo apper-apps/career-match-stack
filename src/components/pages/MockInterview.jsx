@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import Card from '@/components/atoms/Card'
 import Button from '@/components/atoms/Button'
 import Badge from '@/components/atoms/Badge'
@@ -8,8 +9,8 @@ import ApperIcon from '@/components/ApperIcon'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
 import Empty from '@/components/ui/Empty'
-
 const MockInterview = () => {
+  const { t } = useTranslation();
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -19,45 +20,44 @@ const MockInterview = () => {
   const [sessionStarted, setSessionStarted] = useState(false)
   const [analyzing, setAnalyzing] = useState(false)
   const [feedback, setFeedback] = useState(null)
-
-  const interviewTypes = [
+const interviewTypes = [
     {
       Id: 1,
-      name: "General Interview",
-      description: "Common interview questions for any role",
+      name: t('generalInterview'),
+      description: t('generalInterviewDesc'),
       duration: "30 minutes",
       questions: [
-        "Tell me about yourself",
-        "Why are you interested in this position?",
-        "What are your greatest strengths?",
-        "Describe a challenging situation you've overcome",
-        "Where do you see yourself in 5 years?"
+        t('tellMeAbout'),
+        t('whyPosition'),
+        t('greatestStrengths'),
+        t('challengingSituation'),
+        t('fiveYears')
       ]
     },
     {
       Id: 2,
-      name: "Technical Interview",
-      description: "Technical questions for software engineering roles",
+      name: t('technicalInterview'),
+      description: t('technicalInterviewDesc'),
       duration: "45 minutes",
       questions: [
-        "Explain the difference between a stack and a queue",
-        "How would you optimize a slow-running query?",
-        "Describe your approach to debugging a production issue",
-        "What's your experience with cloud platforms?",
-        "How do you ensure code quality in your projects?"
+        t('stackQueue'),
+        t('optimizeQuery'),
+        t('debuggingApproach'),
+        t('cloudExperience'),
+        t('codeQuality')
       ]
     },
     {
       Id: 3,
-      name: "Behavioral Interview",
-      description: "Behavioral questions using the STAR method",
+      name: t('behavioralInterview'),
+      description: t('behavioralInterviewDesc'),
       duration: "40 minutes",
       questions: [
-        "Tell me about a time you had to work with a difficult team member",
-        "Describe a situation where you had to meet a tight deadline",
-        "Give an example of when you had to make a difficult decision",
-        "Tell me about a time you failed and how you handled it",
-        "Describe a time you had to lead a project"
+        t('difficultTeamMember'),
+        t('tightDeadline'),
+        t('difficultDecision'),
+        t('failureHandling'),
+        t('leadProject')
       ]
     }
   ]
@@ -107,9 +107,9 @@ const MockInterview = () => {
     setFeedback(null)
   }
 
-  const handleNextQuestion = async () => {
+const handleNextQuestion = async () => {
     if (!userResponse.trim()) {
-      toast.error('Please provide an answer before proceeding')
+      toast.error(t('provideAnswer'))
       return
     }
 
@@ -124,19 +124,19 @@ const MockInterview = () => {
       setAnalyzing(false)
     } else {
       // End of interview
-      const sessionFeedback = {
+const sessionFeedback = {
         score: Math.floor(Math.random() * 20) + 80, // Random score between 80-100
         strengths: [
-          "Clear communication",
-          "Good examples provided",
-          "Confident delivery"
+          t('clearCommunication'),
+          t('goodExamples'),
+          t('confidentDelivery')
         ],
         improvements: [
-          "More specific details in examples",
-          "Better structure in responses",
-          "Stronger closing statements"
+          t('moreSpecific'),
+          t('betterStructure'),
+          t('strongerClosing')
         ],
-        overallFeedback: "Strong performance overall. Continue practicing to improve confidence and delivery."
+        overallFeedback: t('overallFeedback')
       }
       
       setFeedback(sessionFeedback)
@@ -151,8 +151,8 @@ const MockInterview = () => {
         feedback: sessionFeedback.overallFeedback
       }
       
-      setSessions(prev => [newSession, ...prev])
-      toast.success('Interview completed! Check your feedback below.')
+setSessions(prev => [newSession, ...prev])
+      toast.success(t('interviewCompletedToast'))
     }
   }
 
@@ -192,17 +192,17 @@ const MockInterview = () => {
           </div>
           <Button
             variant="outline"
-            icon="X"
+icon="X"
             onClick={endSession}
           >
-            End Interview
+            {t('endInterview')}
           </Button>
         </div>
 
         {/* Progress Bar */}
         <Card className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-medium text-gray-700">Progress</span>
+<div className="flex items-center justify-between mb-4">
+            <span className="text-sm font-medium text-gray-700">{t('progress')}</span>
             <span className="text-sm font-medium text-primary-600">
               {Math.round(((currentQuestion + 1) / activeSession.questions.length) * 100)}%
             </span>
@@ -224,9 +224,9 @@ const MockInterview = () => {
               <div className="w-20 h-20 bg-gradient-to-r from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <ApperIcon name="Award" size={40} className="text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Interview Completed!</h2>
+<h2 className="text-2xl font-bold text-gray-900 mb-4">{t('interviewCompleted')}</h2>
               <div className="flex items-center justify-center space-x-2 mb-6">
-                <span className="text-lg text-gray-600">Your Score:</span>
+                <span className="text-lg text-gray-600">{t('yourScore')}</span>
                 <Badge variant={getScoreColor(feedback.score)} size="lg">
                   {feedback.score}/100
                 </Badge>
@@ -235,10 +235,10 @@ const MockInterview = () => {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="p-6">
+<Card className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <ApperIcon name="CheckCircle" size={20} className="text-accent-500 mr-2" />
-                  Strengths
+                  {t('strengths')}
                 </h3>
                 <ul className="space-y-2">
                   {feedback.strengths.map((strength, index) => (
@@ -250,10 +250,10 @@ const MockInterview = () => {
                 </ul>
               </Card>
 
-              <Card className="p-6">
+<Card className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <ApperIcon name="Target" size={20} className="text-primary-500 mr-2" />
-                  Areas for Improvement
+                  {t('improvements')}
                 </h3>
                 <ul className="space-y-2">
                   {feedback.improvements.map((improvement, index) => (
@@ -269,10 +269,10 @@ const MockInterview = () => {
             <div className="text-center">
               <Button
                 variant="primary"
-                icon="RotateCcw"
+icon="RotateCcw"
                 onClick={endSession}
               >
-                Start New Interview
+                {t('startNewInterview')}
               </Button>
             </div>
           </div>
@@ -283,40 +283,40 @@ const MockInterview = () => {
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
                   <ApperIcon name="MessageSquare" size={24} className="text-white" />
-                </div>
+</div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">AI Interviewer</h3>
-                  <p className="text-sm text-gray-500">Analyzing your response...</p>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('aiInterviewer')}</h3>
+                  <p className="text-sm text-gray-500">{t('analyzing')}</p>
                 </div>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="font-medium text-gray-900 mb-4">Question:</h4>
+<div className="bg-gray-50 rounded-lg p-6">
+                <h4 className="font-medium text-gray-900 mb-4">{t('question')}</h4>
                 <p className="text-lg text-gray-800">{activeSession.questions[currentQuestion]}</p>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">💡 Tip:</h4>
+<div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">{t('tip')}</h4>
                 <p className="text-sm text-blue-800">
-                  Use the STAR method: Situation, Task, Action, Result. Be specific and provide concrete examples.
+                  {t('starMethod')}
                 </p>
               </div>
             </Card>
 
-            <Card className="p-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Your Response</h3>
+<Card className="p-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('yourResponse')}</h3>
               
               <div className="space-y-4">
                 <textarea
                   value={userResponse}
                   onChange={(e) => setUserResponse(e.target.value)}
-                  placeholder="Type your answer here..."
+                  placeholder={t('typeAnswer')}
                   className="w-full h-40 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                 />
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">
-                    {userResponse.length} characters
+<span className="text-sm text-gray-500">
+                    {userResponse.length} {t('characters')}
                   </span>
                   <div className="flex space-x-3">
                     <Button
@@ -324,7 +324,7 @@ const MockInterview = () => {
                       onClick={() => setUserResponse('')}
                       disabled={!userResponse.trim()}
                     >
-                      Clear
+                      {t('clear')}
                     </Button>
                     <Button
                       variant="primary"
@@ -332,8 +332,8 @@ const MockInterview = () => {
                       loading={analyzing}
                       disabled={!userResponse.trim()}
                       icon={currentQuestion < activeSession.questions.length - 1 ? "ArrowRight" : "Check"}
-                    >
-                      {currentQuestion < activeSession.questions.length - 1 ? "Next Question" : "Finish Interview"}
+>
+                      {currentQuestion < activeSession.questions.length - 1 ? t('nextQuestion') : t('finishInterview')}
                     </Button>
                   </div>
                 </div>
@@ -348,16 +348,16 @@ const MockInterview = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Mock Interview</h1>
+<div className="text-center">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('mockInterview')}</h1>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Practice your interview skills with AI-powered mock interviews. Get real-time feedback and improve your performance.
+          {t('mockInterviewDesc')}
         </p>
       </div>
 
       {/* Interview Types */}
-      <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Choose Interview Type</h2>
+<div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('chooseInterviewType')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {interviewTypes.map((type) => (
             <motion.div
@@ -371,9 +371,9 @@ const MockInterview = () => {
                     <Badge variant="primary" size="sm">{type.duration}</Badge>
                   </div>
                   <p className="text-gray-600 mb-4">{type.description}</p>
-                  <div className="flex items-center text-sm text-gray-500">
+<div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="HelpCircle" size={16} className="mr-1" />
-                    {type.questions.length} questions
+                    {type.questions.length} {t('questions')}
                   </div>
                 </div>
               </Card>
@@ -382,16 +382,16 @@ const MockInterview = () => {
         </div>
       </div>
 
-      {/* Previous Sessions */}
+{/* Previous Sessions */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Previous Sessions</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('previousSessions')}</h2>
         
         {sessions.length === 0 ? (
           <Empty
             icon="MessageSquare"
-            title="No interview sessions yet"
-            message="Start your first mock interview to practice and improve your skills."
-            actionLabel="Start Interview"
+            title={t('noInterviewSessions')}
+            message={t('noInterviewSessionsDesc')}
+            actionLabel={t('startInterview')}
             onAction={() => startSession(interviewTypes[0])}
           />
         ) : (
@@ -423,10 +423,10 @@ const MockInterview = () => {
                       </Badge>
                       <Button
                         variant="outline"
-                        size="sm"
-                        icon="Eye"
-                      >
-                        View Details
+size="sm"
+                      icon="Eye"
+                    >
+                      {t('viewDetails')}
                       </Button>
                     </div>
                   </div>

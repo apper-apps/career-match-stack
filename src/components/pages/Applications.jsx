@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
-import ApplicationCard from '@/components/molecules/ApplicationCard'
-import Button from '@/components/atoms/Button'
-import Card from '@/components/atoms/Card'
-import FormField from '@/components/molecules/FormField'
-import ApperIcon from '@/components/ApperIcon'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Empty from '@/components/ui/Empty'
-
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import ApplicationCard from "@/components/molecules/ApplicationCard";
+import FormField from "@/components/molecules/FormField";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 const Applications = () => {
+  const { t } = useTranslation();
   const [applications, setApplications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isAdding, setIsAdding] = useState(false)
   const [formData, setFormData] = useState({})
   const [filter, setFilter] = useState('all')
-
-  const statusColumns = [
-    { id: 'applied', title: 'Applied', color: 'bg-blue-100 text-blue-800' },
-    { id: 'screening', title: 'Screening', color: 'bg-yellow-100 text-yellow-800' },
-    { id: 'interview', title: 'Interview', color: 'bg-purple-100 text-purple-800' },
-    { id: 'final', title: 'Final Round', color: 'bg-indigo-100 text-indigo-800' },
-    { id: 'offer', title: 'Offer', color: 'bg-green-100 text-green-800' },
-    { id: 'rejected', title: 'Rejected', color: 'bg-red-100 text-red-800' }
+const statusColumns = [
+    { id: 'applied', title: t('applied'), color: 'bg-blue-100 text-blue-800' },
+    { id: 'screening', title: t('screening'), color: 'bg-yellow-100 text-yellow-800' },
+    { id: 'interview', title: t('interview'), color: 'bg-purple-100 text-purple-800' },
+    { id: 'final', title: t('finalRound'), color: 'bg-indigo-100 text-indigo-800' },
+    { id: 'offer', title: t('offer'), color: 'bg-green-100 text-green-800' },
+    { id: 'rejected', title: t('rejected'), color: 'bg-red-100 text-red-800' }
   ]
 
   const loadApplications = async () => {
@@ -102,11 +102,11 @@ const Applications = () => {
     }))
   }
 
-  const handleAddApplication = async () => {
+const handleAddApplication = async () => {
     try {
       if (!formData.companyName || !formData.position) {
-        toast.error('Please fill in company name and position')
-        return
+        toast.error(t('fillRequired'));
+        return;
       }
 
       const newApplication = {
@@ -116,18 +116,18 @@ const Applications = () => {
         status: 'applied',
         appliedDate: new Date().toISOString(),
         deadline: formData.deadline ? new Date(formData.deadline).toISOString() : null,
-        nextStep: 'Application submitted'
-      }
+        nextStep: t('applicationSubmitted')
+      };
 
-      setApplications(prev => [newApplication, ...prev])
-      setFormData({})
-      setIsAdding(false)
-      toast.success('Application added successfully!')
+      setApplications(prev => [newApplication, ...prev]);
+      setFormData({});
+      setIsAdding(false);
+      toast.success(t('addApplicationSuccess'));
       
     } catch (err) {
-      toast.error('Failed to add application')
+      toast.error(t('addApplicationFailed'));
     }
-  }
+  };
 
   const handleStatusChange = (applicationId, newStatus) => {
     setApplications(prev =>
@@ -136,12 +136,12 @@ const Applications = () => {
           ? { ...app, status: newStatus }
           : app
       )
-    )
-    toast.success('Status updated successfully!')
+)
+    toast.success(t('statusUpdated'))
   }
 
-  const handleEdit = (applicationId) => {
-    toast.info('Edit functionality coming soon!')
+const handleEdit = (applicationId) => {
+    toast.info(t('editFunctionality'))
   }
 
   const getApplicationsByStatus = (status) => {
@@ -163,20 +163,20 @@ const Applications = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Applications</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('applications')}</h1>
           <p className="text-gray-600 mt-2">
-            Track your job applications and interview progress
+            {t('applicationsDesc')}
           </p>
         </div>
         <div className="mt-4 sm:mt-0">
           <Button
             variant="primary"
             icon="Plus"
-            onClick={() => setIsAdding(true)}
+onClick={() => setIsAdding(true)}
           >
-            Add Application
+            {t('addApplication')}
           </Button>
         </div>
       </div>
@@ -203,12 +203,12 @@ const Applications = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-xl max-w-md w-full p-6"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Add New Application</h3>
+>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('addNewApplication')}</h3>
             
             <div className="space-y-4">
-              <FormField
-                label="Company Name"
+<FormField
+                label={t('companyName')}
                 name="companyName"
                 value={formData.companyName || ''}
                 onChange={handleInputChange}
@@ -216,8 +216,8 @@ const Applications = () => {
                 icon="Building"
               />
               
-              <FormField
-                label="Position"
+<FormField
+                label={t('position')}
                 name="position"
                 value={formData.position || ''}
                 onChange={handleInputChange}
@@ -225,8 +225,8 @@ const Applications = () => {
                 icon="Target"
               />
               
-              <FormField
-                label="Application Deadline"
+<FormField
+                label={t('applicationDeadline')}
                 name="deadline"
                 type="date"
                 value={formData.deadline || ''}
@@ -236,18 +236,17 @@ const Applications = () => {
             </div>
 
             <div className="flex justify-end space-x-3 mt-6">
-              <Button
-                variant="outline"
+<Button
                 onClick={() => setIsAdding(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 variant="primary"
                 onClick={handleAddApplication}
-                icon="Plus"
+icon="Plus"
               >
-                Add Application
+                {t('addApplication')}
               </Button>
             </div>
           </motion.div>
@@ -259,9 +258,9 @@ const Applications = () => {
         <Button
           variant={filter === 'all' ? 'primary' : 'outline'}
           size="sm"
-          onClick={() => setFilter('all')}
+onClick={() => setFilter('all')}
         >
-          All ({applications.length})
+          {t('all')} ({applications.length})
         </Button>
         {statusColumns.map((status) => (
           <Button
@@ -276,12 +275,12 @@ const Applications = () => {
       </div>
 
       {/* Applications Grid */}
-      {filteredApplications.length === 0 ? (
+{filteredApplications.length === 0 ? (
         <Empty
           icon="Briefcase"
-          title="No applications yet"
-          message="Start tracking your job applications to stay organized and follow up effectively."
-          actionLabel="Add Application"
+          title={t('noApplications')}
+          message={t('noApplicationsDesc')}
+          actionLabel={t('addApplication')}
           onAction={() => setIsAdding(true)}
         />
       ) : (
@@ -310,14 +309,13 @@ const Applications = () => {
 
       {/* Kanban Board View Toggle */}
       <div className="flex justify-center">
-        <Button
+<Button
           variant="outline"
           icon="Layout"
-          onClick={() => toast.info('Kanban board view coming soon!')}
+          onClick={() => toast.info(t('kanbanSoon'))}
         >
-          Switch to Kanban View
+          {t('switchKanban')}
         </Button>
-      </div>
     </div>
   )
 }

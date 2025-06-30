@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
@@ -9,8 +10,8 @@ import FormField from "@/components/molecules/FormField";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import Loading from "@/components/ui/Loading";
-
 const Documents = () => {
+  const { t } = useTranslation();
   const [documents, setDocuments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -18,34 +19,33 @@ const Documents = () => {
   const [isCreating, setIsCreating] = useState(false)
   const [formData, setFormData] = useState({})
   const [generating, setGenerating] = useState(false)
-
-  const templates = [
+const templates = [
     {
       Id: 1,
-      name: "Professional Resume",
+      name: t('professionalResume'),
       type: "resume",
-      description: "Clean, professional resume template perfect for corporate roles",
+      description: t('professionalResumeDesc'),
       preview: "/api/placeholder/300/400"
     },
     {
       Id: 2,
-      name: "Creative Resume",
+      name: t('creativeResume'),
       type: "resume",
-      description: "Modern, creative resume template for design and creative roles",
+      description: t('creativeResumeDesc'),
       preview: "/api/placeholder/300/400"
     },
     {
       Id: 3,
-      name: "Technical Resume",
+      name: t('technicalResume'),
       type: "resume",
-      description: "Technical resume template optimized for engineering roles",
+      description: t('technicalResumeDesc'),
       preview: "/api/placeholder/300/400"
     },
     {
       Id: 4,
-      name: "Standard Cover Letter",
+      name: t('standardCoverLetter'),
       type: "cover-letter",
-      description: "Professional cover letter template for job applications",
+      description: t('standardCoverLetterDesc'),
       preview: "/api/placeholder/300/400"
     }
   ]
@@ -130,22 +130,22 @@ const Documents = () => {
       setSelectedTemplate(null)
       setFormData({})
       
-      toast.success('Document generated successfully!')
+toast.success(t('documentGenerated'))
       
     } catch (err) {
-      toast.error('Failed to generate document. Please try again.')
+      toast.error(t('documentGenerationFailed'))
     } finally {
       setGenerating(false)
     }
   }
 
-  const handleDownload = (document) => {
-    toast.success(`Downloading ${document.name}...`)
+const handleDownload = (document) => {
+    toast.success(t('downloading', { name: document.name }))
   }
 
   const handleDelete = (documentId) => {
     setDocuments(prev => prev.filter(doc => doc.Id !== documentId))
-    toast.success('Document deleted successfully')
+    toast.success(t('documentDeleted'))
   }
 
   if (loading) {
@@ -159,11 +159,11 @@ const Documents = () => {
 if (isCreating) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center justify-between">
+<div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Create Document</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('createDocument')}</h1>
             <p className="text-gray-600 mt-2">
-              Using template: {selectedTemplate.name}
+              {t('chooseTemplate')}: {selectedTemplate.name}
             </p>
           </div>
           <Button
@@ -171,17 +171,17 @@ if (isCreating) {
             icon="X"
             onClick={() => setIsCreating(false)}
           >
-            Cancel
+            {t('cancel')}
           </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form */}
-          <Card className="p-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Document Details</h3>
+<Card className="p-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('documentDetails')}</h3>
             <div className="space-y-6">
               <FormField
-                label="Document Name"
+                label={t('documentName')}
                 name="name"
                 value={formData.name || ''}
                 onChange={handleInputChange}
@@ -189,21 +189,21 @@ if (isCreating) {
               />
 
               {selectedTemplate.type === 'cover-letter' && (
-                <>
+<>
                   <FormField
-                    label="Company Name"
+                    label={t('companyName')}
                     name="company"
                     value={formData.company || ''}
                     onChange={handleInputChange}
                     required
                   />
-                  <div>
-                    <label className="form-label">Why are you interested in this role?</label>
+<div>
+                    <label className="form-label">{t('whyInterested')}</label>
                     <textarea
                       value={formData.motivation || ''}
                       onChange={(e) => handleInputChange(e.target.value, 'motivation')}
                       className="form-input h-32 resize-none"
-                      placeholder="Explain your interest and motivation for this position..."
+                      placeholder={t('explainInterest')}
                     />
                   </div>
                 </>
@@ -211,11 +211,11 @@ if (isCreating) {
             </div>
 
             <div className="mt-8 flex justify-end space-x-4">
-              <Button
+<Button
                 variant="outline"
                 onClick={() => setIsCreating(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -223,18 +223,18 @@ if (isCreating) {
                 loading={generating}
                 icon="Sparkles"
               >
-                Generate with AI
+                {t('generateWithAI')}
               </Button>
             </div>
           </Card>
 
           {/* Preview */}
-          <Card className="p-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Template Preview</h3>
+<Card className="p-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('templatePreview')}</h3>
             <div className="bg-gray-100 rounded-lg p-4 h-96 flex items-center justify-center">
               <div className="text-center">
                 <ApperIcon name="FileText" size={48} className="text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Template preview will appear here</p>
+                <p className="text-gray-600">{t('templatePreviewDesc')}</p>
                 <p className="text-sm text-gray-500 mt-2">{selectedTemplate.description}</p>
               </div>
             </div>
@@ -247,18 +247,18 @@ if (isCreating) {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Documents</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('documents')}</h1>
           <p className="text-gray-600 mt-2">
-            Create professional resumes and cover letters with AI assistance
+            {t('documentsDesc')}
           </p>
         </div>
       </div>
 
       {/* Templates Section */}
-      <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Choose a Template</h2>
+<div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('chooseTemplate')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {templates.map((template) => (
             <motion.div
@@ -282,16 +282,16 @@ if (isCreating) {
         </div>
       </div>
 
-      {/* My Documents Section */}
+{/* My Documents Section */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">My Documents</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('myDocuments')}</h2>
         
         {documents.length === 0 ? (
           <Empty
             icon="FileText"
-            title="No documents yet"
-            message="Create your first professional document using our AI-powered templates."
-            actionLabel="Create Document"
+            title={t('noDocuments')}
+            message={t('noDocumentsDesc')}
+            actionLabel={t('createDocument')}
             onAction={() => setIsCreating(true)}
           />
         ) : (
@@ -308,7 +308,7 @@ if (isCreating) {
                       <h3 className="font-semibold text-gray-900 mb-1">
                         {document.name}
                       </h3>
-                      <div className="flex items-center gap-2 mb-2">
+<div className="flex items-center gap-2 mb-2">
                         <Badge variant="secondary" size="sm">
                           {document.type}
                         </Badge>
@@ -316,28 +316,27 @@ if (isCreating) {
                           variant={document.status === 'completed' ? 'success' : 'warning'}
                           size="sm"
                         >
-                          {document.status}
+                          {t(document.status)}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-500">
                         Created {new Date(document.createdAt).toLocaleDateString()}
                       </p>
-                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
                       variant="primary"
                       size="sm"
                       onClick={() => handleDownload(document)}
-                    >
-                      Download
+>
+                      {t('download')}
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleDelete(document.Id)}
                     >
-                      Delete
+                      {t('delete')}
                     </Button>
                   </div>
                 </Card>

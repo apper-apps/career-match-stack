@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import RecommendationCard from '@/components/molecules/RecommendationCard'
 import Button from '@/components/atoms/Button'
 import Badge from '@/components/atoms/Badge'
@@ -8,8 +9,8 @@ import ApperIcon from '@/components/ApperIcon'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
 import Empty from '@/components/ui/Empty'
-
 const Recommendations = () => {
+  const { t } = useTranslation();
   const [recommendations, setRecommendations] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -114,8 +115,8 @@ const Recommendations = () => {
     loadRecommendations()
   }, [])
 
-  const handleRecommendationClick = (recommendation) => {
-    toast.info(`Viewing details for ${recommendation.title}`)
+const handleRecommendationClick = (recommendation) => {
+    toast.info(t('viewingDetails', { title: recommendation.title }))
   }
 
   const filteredRecommendations = recommendations.filter(rec => {
@@ -138,12 +139,12 @@ const Recommendations = () => {
   }
 
   if (recommendations.length === 0) {
-    return (
+return (
       <Empty
         icon="Target"
-        title="No recommendations yet"
-        message="Complete your self-analysis to get personalized job and career recommendations tailored to your profile."
-        actionLabel="Start Self-Analysis"
+        title={t('noRecommendations')}
+        message={t('noRecommendationsDesc')}
+        actionLabel={t('startSelfAnalysis')}
         onAction={() => window.location.href = '/self-analysis'}
       />
     )
@@ -152,23 +153,23 @@ const Recommendations = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Recommendations</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('recommendations')}</h1>
           <p className="text-gray-600 mt-2">
-            AI-powered job and career recommendations based on your profile
+            {t('recommendationsDesc')}
           </p>
         </div>
         <div className="mt-4 sm:mt-0 flex items-center space-x-3">
-          <Badge variant="success" size="lg">
-            {recommendations.length} Matches Found
+<Badge variant="success" size="lg">
+            {recommendations.length} {t('matchesFound')}
           </Badge>
           <Button
             variant="primary"
             icon="RefreshCw"
-            onClick={loadRecommendations}
+onClick={loadRecommendations}
           >
-            Refresh
+            {t('refresh')}
           </Button>
         </div>
       </div>
@@ -179,36 +180,36 @@ const Recommendations = () => {
           <Button
             variant={filter === 'all' ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => setFilter('all')}
+onClick={() => setFilter('all')}
           >
-            All
+            {t('all')}
           </Button>
           <Button
             variant={filter === 'job' ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => setFilter('job')}
+onClick={() => setFilter('job')}
           >
-            Job Roles
+            {t('jobRoles')}
           </Button>
           <Button
             variant={filter === 'career' ? 'primary' : 'outline'}
             size="sm"
-            onClick={() => setFilter('career')}
+onClick={() => setFilter('career')}
           >
-            Career Paths
+            {t('careerPaths')}
           </Button>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-500">Sort by:</span>
+<div className="flex items-center space-x-2">
+          <span className="text-sm text-gray-500">{t('sort')} by:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
-            <option value="match">Match Score</option>
-            <option value="salary">Salary</option>
-            <option value="title">Title</option>
+            <option value="match">{t('matchScore')}</option>
+            <option value="salary">{t('salary')}</option>
+            <option value="title">{t('title')}</option>
           </select>
         </div>
       </div>
@@ -218,7 +219,7 @@ const Recommendations = () => {
         <div className="bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-accent-100 text-sm">High Matches</p>
+<p className="text-accent-100 text-sm">{t('highMatches')}</p>
               <p className="text-2xl font-bold">
                 {sortedRecommendations.filter(r => r.matchScore >= 80).length}
               </p>
@@ -230,7 +231,7 @@ const Recommendations = () => {
         <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-yellow-100 text-sm">Medium Matches</p>
+<p className="text-yellow-100 text-sm">{t('mediumMatches')}</p>
               <p className="text-2xl font-bold">
                 {sortedRecommendations.filter(r => r.matchScore >= 60 && r.matchScore < 80).length}
               </p>
@@ -242,7 +243,7 @@ const Recommendations = () => {
         <div className="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-primary-100 text-sm">Average Match</p>
+<p className="text-primary-100 text-sm">{t('averageMatch')}</p>
               <p className="text-2xl font-bold">
                 {Math.round(sortedRecommendations.reduce((acc, r) => acc + r.matchScore, 0) / sortedRecommendations.length)}%
               </p>
@@ -280,9 +281,10 @@ const Recommendations = () => {
         <div className="text-center">
           <Button
             variant="outline"
-            icon="Plus"
-            onClick={() => toast.info('Loading more recommendations...')}
+icon="Plus"
+            onClick={() => toast.info(t('loadingMore'))}
           >
+            {t('loadMoreRecommendations')}
             Load More Recommendations
           </Button>
         </div>

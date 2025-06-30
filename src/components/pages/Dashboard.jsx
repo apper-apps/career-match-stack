@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import StatCard from '@/components/molecules/StatCard'
 import Card from '@/components/atoms/Card'
 import Button from '@/components/atoms/Button'
@@ -8,8 +9,8 @@ import ProgressRing from '@/components/atoms/ProgressRing'
 import ApperIcon from '@/components/ApperIcon'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
-
 const Dashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate()
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -64,44 +65,44 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Track your job search progress and next steps</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('dashboard')}</h1>
+          <p className="text-gray-600 mt-2">{t('trackProgress')}</p>
         </div>
         <div className="mt-4 sm:mt-0">
           <Button
             variant="primary"
-            icon="Plus"
-            onClick={() => navigate('/applications')}
-          >
-            Add Application
+icon="Plus"
+          onClick={() => navigate('/applications')}
+        >
+          {t('addApplication')}
           </Button>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Applications"
+          title={t('totalApplications')}
           value={dashboardData.stats.totalApplications}
           icon="FileText"
           color="primary"
         />
         <StatCard
-          title="Active Applications"
+          title={t('activeApplications')}
           value={dashboardData.stats.activeApplications}
           icon="Clock"
           color="warning"
         />
         <StatCard
-          title="Interviews"
+          title={t('interviews')}
           value={dashboardData.stats.interviews}
           icon="MessageSquare"
           color="secondary"
         />
         <StatCard
-          title="Offers"
+          title={t('offers')}
           value={dashboardData.stats.offers}
           icon="Award"
           color="accent"
@@ -111,17 +112,17 @@ const Dashboard = () => {
       {/* Progress Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Journey Progress */}
-        <Card>
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">Your Journey Progress</h3>
+<Card>
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('journeyProgress')}</h3>
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
                   <ApperIcon name="UserCheck" size={20} className="text-white" />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">Self Analysis</p>
-                  <p className="text-sm text-gray-500">Complete your profile</p>
+<div>
+                  <p className="font-medium text-gray-900">{t('selfAnalysis')}</p>
+                  <p className="text-sm text-gray-500">{t('completeProfile')}</p>
                 </div>
               </div>
               <ProgressRing
@@ -141,9 +142,9 @@ const Dashboard = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center">
                   <ApperIcon name="Target" size={20} className="text-white" />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">Recommendations</p>
-                  <p className="text-sm text-gray-500">Review job matches</p>
+<div>
+                  <p className="font-medium text-gray-900">{t('recommendations')}</p>
+                  <p className="text-sm text-gray-500">{t('reviewMatches')}</p>
                 </div>
               </div>
               <ProgressRing
@@ -163,9 +164,9 @@ const Dashboard = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-accent-500 to-accent-600 rounded-full flex items-center justify-center">
                   <ApperIcon name="FileText" size={20} className="text-white" />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">Documents</p>
-                  <p className="text-sm text-gray-500">Create resume & cover letters</p>
+<div>
+                  <p className="font-medium text-gray-900">{t('documents')}</p>
+                  <p className="text-sm text-gray-500">{t('createDocuments')}</p>
                 </div>
               </div>
               <ProgressRing
@@ -185,9 +186,9 @@ const Dashboard = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
                   <ApperIcon name="MessageSquare" size={20} className="text-white" />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">Mock Interviews</p>
-                  <p className="text-sm text-gray-500">Practice with AI</p>
+<div>
+                  <p className="font-medium text-gray-900">{t('mockInterview')}</p>
+                  <p className="text-sm text-gray-500">{t('practiceAI')}</p>
                 </div>
               </div>
               <ProgressRing
@@ -205,8 +206,8 @@ const Dashboard = () => {
         </Card>
 
         {/* Recent Activity */}
-        <Card>
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">Recent Activity</h3>
+<Card>
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('recentActivity')}</h3>
           <div className="space-y-4">
             {dashboardData.recentActivity.map((activity, index) => (
               <motion.div
@@ -241,40 +242,40 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
+<Card>
+        <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('quickActions')}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Button
             variant="outline"
             icon="UserCheck"
             onClick={() => navigate('/self-analysis')}
-            className="h-20 flex-col"
-          >
-            <span className="mt-2">Complete Analysis</span>
+className="h-20 flex-col"
+        >
+          <span className="mt-2">{t('completeAnalysis')}</span>
           </Button>
           <Button
             variant="outline"
             icon="Target"
             onClick={() => navigate('/recommendations')}
-            className="h-20 flex-col"
-          >
-            <span className="mt-2">View Matches</span>
+className="h-20 flex-col"
+        >
+          <span className="mt-2">{t('viewMatches')}</span>
           </Button>
           <Button
             variant="outline"
             icon="FileText"
             onClick={() => navigate('/documents')}
-            className="h-20 flex-col"
-          >
-            <span className="mt-2">Create Resume</span>
+className="h-20 flex-col"
+        >
+          <span className="mt-2">{t('createResume')}</span>
           </Button>
           <Button
             variant="outline"
             icon="MessageSquare"
             onClick={() => navigate('/mock-interview')}
-            className="h-20 flex-col"
-          >
-            <span className="mt-2">Practice Interview</span>
+className="h-20 flex-col"
+        >
+          <span className="mt-2">{t('practiceInterview')}</span>
           </Button>
         </div>
       </Card>
