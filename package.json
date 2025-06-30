@@ -11,7 +11,7 @@
   },
 "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
-    "apexcharts": "^3.49.0",
+    "apexcharts": "^4.6.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^10.16.4",
     "i18next": "^23.8.2",
