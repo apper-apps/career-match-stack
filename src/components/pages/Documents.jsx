@@ -317,11 +317,12 @@ if (isCreating) {
                           size="sm"
                         >
                           {t(document.status)}
-                        </Badge>
+</Badge>
                       </div>
                       <p className="text-sm text-gray-500">
                         Created {new Date(document.createdAt).toLocaleDateString()}
                       </p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
