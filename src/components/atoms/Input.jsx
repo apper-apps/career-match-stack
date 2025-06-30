@@ -16,6 +16,10 @@ const Input = forwardRef(({
   ...props 
 }, ref) => {
   const [focused, setFocused] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+
+  const isPasswordField = type === 'password'
+  const inputType = isPasswordField && showPassword ? 'text' : type
 
   return (
     <div className={`w-full ${className}`}>
@@ -36,10 +40,9 @@ const Input = forwardRef(({
             />
           </div>
         )}
-        
-        <input
+<input
           ref={ref}
-          type={type}
+          type={inputType}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -49,12 +52,27 @@ const Input = forwardRef(({
           className={`
             form-input
             ${icon ? 'pl-10' : ''}
+            ${isPasswordField ? 'pr-10' : ''}
             ${error ? 'border-red-500 focus:ring-red-500' : ''}
             ${focused ? 'ring-2 ring-primary-500 border-transparent' : ''}
             ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}
           `}
           {...props}
         />
+
+        {isPasswordField && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            disabled={disabled}
+          >
+            <ApperIcon
+              name={showPassword ? 'EyeOff' : 'Eye'}
+              size={18}
+            />
+          </button>
+        )}
       </div>
       
       {error && (

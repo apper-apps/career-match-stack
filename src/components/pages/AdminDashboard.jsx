@@ -1,21 +1,22 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
-import Chart from 'react-apexcharts'
-import StatCard from '@/components/molecules/StatCard'
-import Card from '@/components/atoms/Card'
-import Button from '@/components/atoms/Button'
-import ApperIcon from '@/components/ApperIcon'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import adminService from '@/services/api/adminService'
-
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import Chart from "react-apexcharts";
+import { useAuth } from "@/contexts/AuthContext";
+import ApperIcon from "@/components/ApperIcon";
+import Dashboard from "@/components/pages/Dashboard";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import StatCard from "@/components/molecules/StatCard";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import adminService from "@/services/api/adminService";
 const AdminDashboard = () => {
+  const { admin, logout } = useAuth()
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
-
   const loadDashboard = async () => {
     try {
       setLoading(true)
@@ -51,8 +52,17 @@ const AdminDashboard = () => {
       updatedData.alerts = updatedData.alerts.filter(alert => alert.Id !== alertId)
       setDashboardData(updatedData)
       toast.success('Alert acknowledged')
-    } catch (err) {
+} catch (err) {
       toast.error('Failed to acknowledge alert')
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      toast.success('Logged out successfully')
+    } catch (error) {
+      toast.error('Error during logout')
     }
   }
 
@@ -63,7 +73,6 @@ const AdminDashboard = () => {
     const interval = setInterval(loadDashboard, 300000)
     return () => clearInterval(interval)
   }, [])
-
   if (loading) {
     return <Loading type="card" count={8} />
   }
@@ -134,16 +143,17 @@ const AdminDashboard = () => {
       y: { formatter: (val) => `${val}%` }
     }
   }
-
-  return (
-    <div className="space-y-8">
+return (
+    <div className="space-y-8 p-6 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-2">Monitor system metrics and user analytics</p>
+          <p className="text-gray-600 mt-2">
+            Welcome back, {admin?.name} • Monitor system metrics and user analytics
+          </p>
         </div>
-        <div className="mt-4 sm:mt-0">
+        <div className="mt-4 sm:mt-0 flex items-center space-x-3">
           <Button
             variant="outline"
             icon="RefreshCw"
@@ -151,6 +161,13 @@ const AdminDashboard = () => {
             disabled={refreshing}
           >
             {refreshing ? 'Refreshing...' : 'Refresh Data'}
+          </Button>
+          <Button
+            variant="ghost"
+            icon="LogOut"
+            onClick={handleLogout}
+          >
+            Logout
           </Button>
         </div>
       </div>
