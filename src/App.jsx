@@ -61,13 +61,10 @@ return (
                   <Settings />
                 </Layout>
               } />
-              
-              {/* Protected Admin Routes */}
+{/* Protected Admin Routes - Separate from main layout */}
               <Route path="/admin" element={
                 <ProtectedRoute>
-                  <Layout>
-                    <AdminDashboard />
-                  </Layout>
+                  <AdminDashboard />
                 </ProtectedRoute>
               } />
             </Routes>

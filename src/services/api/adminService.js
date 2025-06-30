@@ -1,5 +1,4 @@
-import { delay } from '@/utils/helpers'
-
+import { delay } from "@/utils/helpers";
 // Mock admin metrics data
 const mockMetrics = {
   newUsers: 247,
@@ -70,6 +69,55 @@ const mockAlerts = [
 ]
 
 let alerts = [...mockAlerts]
+
+// Mock current model configuration
+const currentModelConfig = {
+  model: 'gpt-4',
+  provider: 'OpenAI',
+  status: 'Active',
+  lastUpdated: '2024-01-15 14:30:00',
+  baseUrl: 'https://api.openai.com/v1',
+  maxTokens: 4000,
+  temperature: 0.7,
+  apiKeyMasked: '****...xyz9',
+  avgResponseTime: 850
+}
+
+// Mock available models
+const mockAvailableModels = [
+  {
+    id: 'gpt-4',
+    name: 'GPT-4',
+    provider: 'OpenAI',
+    description: 'Most capable GPT model for complex tasks',
+    maxTokens: 8192,
+    pricing: '$0.03/1K tokens'
+  },
+  {
+    id: 'gpt-3.5-turbo',
+    name: 'GPT-3.5 Turbo',
+    provider: 'OpenAI',
+    description: 'Fast and efficient for most tasks',
+    maxTokens: 4096,
+    pricing: '$0.002/1K tokens'
+  },
+  {
+    id: 'claude-3-opus',
+    name: 'Claude 3 Opus',
+    provider: 'Anthropic',
+    description: 'Anthropic\'s most capable model',
+    maxTokens: 200000,
+    pricing: '$15/1M tokens'
+  },
+  {
+    id: 'claude-3-sonnet',
+    name: 'Claude 3 Sonnet',
+    provider: 'Anthropic',
+    description: 'Balanced performance and speed',
+    maxTokens: 200000,
+    pricing: '$3/1M tokens'
+  }
+]
 
 const adminService = {
   async getDashboardMetrics() {
@@ -161,6 +209,85 @@ const adminService = {
       },
       averageCompletionTime: '4.2 days',
       dropoutPoints: mockTrends.dropoutRate
+}
+  },
+
+  // LLM Model Management Methods
+  async getCurrentModelConfig() {
+    await delay(300)
+    return { ...currentModelConfig }
+  },
+
+  async getAvailableModels() {
+    await delay(400)
+    return [...mockAvailableModels]
+  },
+
+  async updateModelConfig(config) {
+    await delay(800)
+    
+    // Validate required fields
+    if (!config.model || !config.apiKey) {
+      throw new Error('Model and API key are required')
+    }
+    
+    // Find the selected model details
+    const selectedModel = mockAvailableModels.find(model => model.id === config.model)
+    if (!selectedModel) {
+      throw new Error('Invalid model selected')
+    }
+    
+    // Update configuration
+    currentModelConfig = {
+      ...currentModelConfig,
+      model: config.model,
+      provider: selectedModel.provider,
+      status: 'Active',
+      lastUpdated: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      baseUrl: config.baseUrl || currentModelConfig.baseUrl,
+      maxTokens: config.maxTokens || currentModelConfig.maxTokens,
+      temperature: config.temperature || currentModelConfig.temperature,
+      apiKeyMasked: `****...${config.apiKey.slice(-4)}`
+    }
+    
+    return { ...currentModelConfig }
+  },
+
+  async testModelConnection(config) {
+    await delay(1500)
+    
+    // Simulate API connection test
+    const success = Math.random() > 0.1 // 90% success rate
+    
+    if (!success) {
+      throw new Error('Failed to connect to model API. Please check your configuration.')
+    }
+    
+    return {
+      success: true,
+      responseTime: Math.floor(Math.random() * 1000) + 500,
+      modelInfo: {
+        name: config.model,
+        version: '1.0.0',
+        status: 'operational'
+      }
+    }
+  },
+
+  async getModelUsageStats(timeRange = '30d') {
+    await delay(600)
+    
+    return {
+      totalRequests: 15432,
+      totalTokens: 2847293,
+      averageResponseTime: currentModelConfig.avgResponseTime,
+      errorRate: 0.8,
+      costThisMonth: mockMetrics.apiCost,
+      topEndpoints: [
+        { endpoint: '/chat/completions', requests: 8234, percentage: 53.4 },
+        { endpoint: '/analysis/generate', requests: 4821, percentage: 31.2 },
+        { endpoint: '/recommendations/create', requests: 2377, percentage: 15.4 }
+      ]
     }
   }
 }
