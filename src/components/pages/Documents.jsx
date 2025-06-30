@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
-import Card from '@/components/atoms/Card'
-import Button from '@/components/atoms/Button'
-import Badge from '@/components/atoms/Badge'
-import FormField from '@/components/molecules/FormField'
-import ApperIcon from '@/components/ApperIcon'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Empty from '@/components/ui/Empty'
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import FormField from "@/components/molecules/FormField";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 
 const Documents = () => {
   const [documents, setDocuments] = useState([])
@@ -156,7 +156,7 @@ const Documents = () => {
     return <Error onRetry={loadDocuments} />
   }
 
-  if (isCreating) {
+if (isCreating) {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
@@ -179,7 +179,6 @@ const Documents = () => {
           {/* Form */}
           <Card className="p-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Document Details</h3>
-            
             <div className="space-y-6">
               <FormField
                 label="Document Name"
@@ -187,37 +186,7 @@ const Documents = () => {
                 value={formData.name || ''}
                 onChange={handleInputChange}
                 required
-                icon="FileText"
               />
-
-              {selectedTemplate.type === 'resume' && (
-                <>
-                  <FormField
-                    label="Target Position"
-                    name="position"
-                    value={formData.position || ''}
-                    onChange={handleInputChange}
-                    required
-                    icon="Target"
-                  />
-                  <FormField
-                    label="Industry"
-                    name="industry"
-                    value={formData.industry || ''}
-                    onChange={handleInputChange}
-                    icon="Building"
-                  />
-                  <div>
-                    <label className="form-label">Key Skills (comma separated)</label>
-                    <textarea
-                      value={formData.skills || ''}
-                      onChange={(e) => handleInputChange(e.target.value, 'skills')}
-                      className="form-input h-32 resize-none"
-                      placeholder="e.g., JavaScript, React, Node.js, Project Management"
-                    />
-                  </div>
-                </>
-              )}
 
               {selectedTemplate.type === 'cover-letter' && (
                 <>
@@ -227,15 +196,6 @@ const Documents = () => {
                     value={formData.company || ''}
                     onChange={handleInputChange}
                     required
-                    icon="Building"
-                  />
-                  <FormField
-                    label="Position Applied For"
-                    name="position"
-                    value={formData.position || ''}
-                    onChange={handleInputChange}
-                    required
-                    icon="Target"
                   />
                   <div>
                     <label className="form-label">Why are you interested in this role?</label>
@@ -294,15 +254,6 @@ const Documents = () => {
             Create professional resumes and cover letters with AI assistance
           </p>
         </div>
-        <div className="mt-4 sm:mt-0">
-          <Button
-            variant="primary"
-            icon="Plus"
-            onClick={() => setIsCreating(true)}
-          >
-            Create Document
-          </Button>
-        </div>
       </div>
 
       {/* Templates Section */}
@@ -344,58 +295,50 @@ const Documents = () => {
             onAction={() => setIsCreating(true)}
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {documents.map((document, index) => (
+          <div className="grid gap-6">
+            {documents.map((document) => (
               <motion.div
                 key={document.Id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
               >
-                <Card>
+                <Card className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                        <ApperIcon
-                          name={document.type === 'resume' ? 'User' : 'Mail'}
-                          size={20}
-                          className="text-primary-600"
-                        />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">
+                        {document.name}
+                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="secondary" size="sm">
+                          {document.type}
+                        </Badge>
+                        <Badge 
+                          variant={document.status === 'completed' ? 'success' : 'warning'}
+                          size="sm"
+                        >
+                          {document.status}
+                        </Badge>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{document.name}</h3>
-                        <p className="text-sm text-gray-500">
-                          {new Date(document.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
+                      <p className="text-sm text-gray-500">
+                        Created {new Date(document.createdAt).toLocaleDateString()}
+                      </p>
                     </div>
-                    <Badge variant="success" size="sm">
-                      {document.status}
-                    </Badge>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <Badge variant="primary" size="sm">
-                      {document.type}
-                    </Badge>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        icon="Download"
-                        onClick={() => handleDownload(document)}
-                      >
-                        Download
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        icon="Trash2"
-                        onClick={() => handleDelete(document.Id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => handleDownload(document)}
+                    >
+                      Download
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDelete(document.Id)}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 </Card>
               </motion.div>
