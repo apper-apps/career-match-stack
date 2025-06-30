@@ -71,7 +71,7 @@ const mockAlerts = [
 let alerts = [...mockAlerts]
 
 // Mock current model configuration
-const currentModelConfig = {
+let currentModelConfig = {
   model: 'gpt-4',
   provider: 'OpenAI',
   status: 'Active',
