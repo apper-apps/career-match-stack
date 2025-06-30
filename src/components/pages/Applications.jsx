@@ -307,15 +307,16 @@ onClick={() => setFilter('all')}
         </div>
       )}
 
-      {/* Kanban Board View Toggle */}
+{/* Kanban Board View Toggle */}
       <div className="flex justify-center">
-<Button
+        <Button
           variant="outline"
           icon="Layout"
           onClick={() => toast.info(t('kanbanSoon'))}
         >
           {t('switchKanban')}
         </Button>
+      </div>
     </div>
   )
 }
